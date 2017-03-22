@@ -157,11 +157,22 @@ public class NewJFrame extends javax.swing.JFrame {
     
     public void computeDistance(ArrayList<Point> points){
         
-        for (Point point : points) {
-           System.out.println(" x = "+ String.valueOf(point.x) + " y = " + String.valueOf(point.y));
-        }
+        for(int k = 0 ; k < points.size()-1 ; k++){
+            for(int t = 1 ; t < points.size() ; t++ ){
+              if(t!=k){ //kendiine olan uzaklığı bulmasına gerek yok
+                long fark =  distance(points.get(k), points.get(t));
+                System.out.println((k+1) +" in " + (t+1)+ " e uzaklıgi =  " + fark);
+              }
+            }     
+        }      
         
-        
+    }
+    
+     public static long distance(Point a, Point b)
+    {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
+        return Math.round(Math.sqrt(dx * dx + dy * dy));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
