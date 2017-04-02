@@ -9,9 +9,11 @@ package antcolony;
  *
  * @author busra
  */
-
 import com.sun.org.apache.xerces.internal.xs.StringList;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Ellipse2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,12 +23,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class NewJFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form NewJFrame
      */
+         ArrayList<Distance> distanceList = new ArrayList<Distance>();
     public NewJFrame() {
         initComponents();
     }
@@ -167,6 +169,7 @@ public class NewJFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+   
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -175,87 +178,109 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
     }
-    
-    public void readFile() throws FileNotFoundException, IOException{
-           File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
-           FileReader fileReader = new FileReader(file);
-           String line;
-          Point nokta;
-          ArrayList<Point> points = new ArrayList<Point>();
+
+    public void readFile() throws FileNotFoundException, IOException {
+
+        File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
+        FileReader fileReader = new FileReader(file);
+        String line;
+        Point nokta;
+        ArrayList<Town> towns = new ArrayList<Town>();
+        Town town;
         BufferedReader br = new BufferedReader(fileReader);
-        boolean okuma = false; 
+        boolean okuma = false;
         try {
-              line = br.readLine();
-                    
-              while(!line.equals("EOF")){
-                  if(line.equals("NODE_COORD_SECTION")){
+            line = br.readLine();
+
+            while (!line.equals("EOF")) {
+                if (line.equals("NODE_COORD_SECTION")) {
                     okuma = true;
-                  }
-                  line = br.readLine();
-                  
-                  if(okuma && !line.equals("EOF")){
-                      //System.out.println(line);
-                      String[] point = line.split(" ");
-                      
-                      float x = Float.parseFloat(point[1]);
-                      float y = Float.parseFloat(point[2]);
-                     // System.out.println(String.valueOf(x)+" - " + String.valueOf(y));
-                      nokta = new Point((int)x ,(int)y);
-                      points.add(nokta);
-                   // POİNT LİSTESİNDE TUT 
-                  }
-              }
-              
+                }
+                line = br.readLine();
+
+                if (okuma && !line.equals("EOF")) {
+                    //System.out.println(line);
+                    String[] point = line.split(" ");
+                    town = new Town();
+                    town.setName(point[0]);                   
+                    float x = Float.parseFloat(point[1]);
+                    float y = Float.parseFloat(point[2]);
+                    // System.out.println(String.valueOf(x)+" - " + String.valueOf(y));
+                    nokta = new Point((int) x, (int) y);
+                    town.setLocation(nokta);
+                    towns.add(town);
+                   }
+            }
+
         } catch (Exception e) {
             br.close();
         }
-        
-        computeDistance(points);
+        /*for(Town t: towns){
+            System.out.println("sehirle: "+ t.getName() +" koordinat " + t.getLocation().x + "   " +t.getLocation().y);
+        }*/
+        computeDistance(towns);
 
-        
-       
     }
-    
-    public void computeDistance(ArrayList<Point> points){
-         long fark;
-         long graphs[][] = new long[52][52];
-        for(int k = 0 ; k < points.size() ; k++){
-            for(int t = 0 ; t < points.size() ; t++ ){
-              if(t!=k){ //kendiine olan uzaklığı bulmasına gerek yok
-                fark =  distance(points.get(k), points.get(t));
-                //System.out.println((k+1) +" in " + (t+1)+ " e uzaklıgi =  " + fark);
-              }else{
-                  fark=0;
-              }
-              //Simetrik olduğu için 1-2 2-1 arası uzaklık aynıdır.
-            graphs[k][t] = graphs[t][k] = fark;
-          
-            }     
-        }      
+
+    public void computeDistance(ArrayList<Town> towns) {
+        /*long fark;
+        long graphs[][] = new long[52][52];
+        for (int k = 0; k < points.size(); k++) {
+            for (int t = 0; t < points.size(); t++) {
+                if (t != k) { //kendiine olan uzaklığı bulmasına gerek yok
+                    fark = distance(points.get(k), points.get(t));
+                    //System.out.println((k+1) +" in " + (t+1)+ " e uzaklıgi =  " + fark);
+                } else {
+                    fark = 0;
+                }
+                //Simetrik olduğu için 1-2 2-1 arası uzaklık aynıdır.
+                graphs[k][t] = graphs[t][k] = fark;
+
+            }
+        }
+
+        showGraphs(graphs);
+        // paintComponent();*/
+        long computedDistance = 0;
+        Distance newDistance;
+        for(Town source : towns ){
+            for(Town destination : towns){
+                if(! source.getName().equals(destination.getName())){
+                    computedDistance = distance(source.getLocation(), destination.getLocation());
+                    newDistance = new Distance();
+                    newDistance.setSource(source);
+                    newDistance.setDestination(destination);
+                    newDistance.setDistance(computedDistance);
+                    distanceList.add(newDistance);
+                }
+            }
+        }
         
-    showGraphs(graphs);
         
+        for(Distance d: distanceList){
+            System.out.println("UZAKLIKLAR HESAPLANDI"+ d.getSource().getName() +" - " +d.getDestination().getName()+" = "+ d.getDistance());
+        }
+                 
     }
-    
-     public static long distance(Point a, Point b)
-    {
+
+    public static long distance(Point a, Point b) {
         double dx = a.x - b.x;
         double dy = a.y - b.y;
         return Math.round(Math.sqrt(dx * dx + dy * dy));
     }
-     
-      private void showGraphs(long[][] graphs) {
-      for(int k = 0  ; k < graphs.length ; k++){
-          for(int t = 0 ; t < graphs.length;t++){
-              if(k!=t){
-                  System.out.println((k+1)+"in " +(t+1)+" e olan uzaklıgı = "+graphs[k][t]);
-              }
-          }
-         // System.out.println("");
-      }
+
+    private void showGraphs(long[][] graphs) {
+        for (int k = 0; k < graphs.length; k++) {
+            for (int t = 0; t < graphs.length; t++) {
+                if (k != t) {
+                    System.out.println((k + 1) + "in " + (t + 1) + " e olan uzaklıgı = " + graphs[k][t]);
+                }
+            }
+            // System.out.println("");
+        }
     }
-      
-     
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -266,5 +291,4 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 
-   
 }
