@@ -10,25 +10,39 @@ package antcolony;
  * @author busra
  */
 import com.sun.org.apache.xerces.internal.xs.StringList;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 public class NewJFrame extends javax.swing.JFrame {
 
+         ArrayList<Distance> distanceList = new ArrayList<Distance>();
+           ArrayList<Town> towns = new ArrayList<Town>();
+           ArrayList<Point> showTown = new ArrayList<Point>();
     /**
      * Creates new form NewJFrame
      */
-         ArrayList<Distance> distanceList = new ArrayList<Distance>();
     public NewJFrame() {
         initComponents();
     }
@@ -70,6 +84,8 @@ public class NewJFrame extends javax.swing.JFrame {
         });
 
         jTextField1.setText("Feramon Sayısı");
+        jTextField1.setAutoscrolls(false);
+        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jTextField1.setDisabledTextColor(new java.awt.Color(239, 29, 29));
 
         jTextField2.setForeground(new java.awt.Color(126, 47, 242));
@@ -80,50 +96,56 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton3.setText("Sonuc Dosyası kaydet");
 
         jButton4.setText("Grafik Ekranı");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 67, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 545, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(90, 90, 90)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         pack();
@@ -142,6 +164,13 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         //algoritmaya başla
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+        //Grafik ekranını açar.
+      
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,6 +203,7 @@ public class NewJFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
                 new NewJFrame().setVisible(true);
             }
         });
@@ -185,7 +215,7 @@ public class NewJFrame extends javax.swing.JFrame {
         FileReader fileReader = new FileReader(file);
         String line;
         Point nokta;
-        ArrayList<Town> towns = new ArrayList<Town>();
+      
         Town town;
         BufferedReader br = new BufferedReader(fileReader);
         boolean okuma = false;
@@ -223,24 +253,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     public void computeDistance(ArrayList<Town> towns) {
-        /*long fark;
-        long graphs[][] = new long[52][52];
-        for (int k = 0; k < points.size(); k++) {
-            for (int t = 0; t < points.size(); t++) {
-                if (t != k) { //kendiine olan uzaklığı bulmasına gerek yok
-                    fark = distance(points.get(k), points.get(t));
-                    //System.out.println((k+1) +" in " + (t+1)+ " e uzaklıgi =  " + fark);
-                } else {
-                    fark = 0;
-                }
-                //Simetrik olduğu için 1-2 2-1 arası uzaklık aynıdır.
-                graphs[k][t] = graphs[t][k] = fark;
-
-            }
-        }
-
-        showGraphs(graphs);
-        // paintComponent();*/
+       
         long computedDistance = 0;
         Distance newDistance;
         for(Town source : towns ){
@@ -257,10 +270,8 @@ public class NewJFrame extends javax.swing.JFrame {
         }
         
         
-        for(Distance d: distanceList){
-            System.out.println("UZAKLIKLAR HESAPLANDI"+ d.getSource().getName() +" - " +d.getDestination().getName()+" = "+ d.getDistance());
-        }
-                 
+       
+       scalingTownToShow();
     }
 
     public static long distance(Point a, Point b) {
@@ -268,17 +279,45 @@ public class NewJFrame extends javax.swing.JFrame {
         double dy = a.y - b.y;
         return Math.round(Math.sqrt(dx * dx + dy * dy));
     }
-
-    private void showGraphs(long[][] graphs) {
-        for (int k = 0; k < graphs.length; k++) {
-            for (int t = 0; t < graphs.length; t++) {
-                if (k != t) {
-                    System.out.println((k + 1) + "in " + (t + 1) + " e olan uzaklıgı = " + graphs[k][t]);
-                }
-            }
-            // System.out.println("");
-        }
+    
+    // scale each point  to show towns on my  jframe 
+    
+    public void scalingTownToShow(){
+        
+        int  xMax, yMax, xMin,yMin,x,y,X,Y,screenMaxX = 1450, screenMinX = 25, screenMaxY = 550 , screenMinY = 25;
+        ArrayList<Integer> xList = new ArrayList<Integer>();
+        ArrayList<Integer> yList = new ArrayList<Integer>();
+        Point p;
+      for(Town t : towns){
+          
+          x = t.getLocation().x;
+          y = t.getLocation().y;
+          xList.add(x);
+          yList.add(y);
+      }
+      
+      xMax = Collections.max(xList);
+      yMax = Collections.max(yList);
+      xMin = Collections.min(xList);
+      yMin = Collections.min(yList);
+      
+       double xRate=(double) (screenMaxX - screenMinX) / (xMax - xMin);
+       double yRate =(double) (screenMaxY - screenMinY) / (yMax - yMin);
+       
+      for(Town t : towns){
+          X = (int) ((t.getLocation().x - xMin) * xRate) + screenMinX;
+          Y = (int) ((t.getLocation().y - yMin) * yRate) + screenMinY;
+          p = new Point(X,Y);
+          
+          showTown.add(p);
+      }
+      //showTowns();
     }
+
+     private void showTowns() {
+       ///draw each town on jframe
+    }
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -291,4 +330,5 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 
+   
 }
