@@ -40,17 +40,14 @@ import javax.swing.JInternalFrame;
 
 public class NewJFrame extends javax.swing.JFrame {
 
-<<<<<<< HEAD
          ArrayList<Distance> distanceList = new ArrayList<Distance>();
            ArrayList<Town> towns = new ArrayList<Town>();
            ArrayList<Point> showTown = new ArrayList<Point>();
            ArrayList<Ant> ants = new ArrayList<Ant>();
-=======
-        ArrayList<Distance> distanceList = new ArrayList<Distance>();
-        ArrayList<Town> towns = new ArrayList<Town>();
-        ArrayList<Point> showTown = new ArrayList<Point>();
+
+       
         JFrame frame;
->>>>>>> 3800e69c4ca391340ab8c8623205012e494cef11
+
     /**
      * Creates new form NewJFrame
      */
@@ -182,7 +179,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-         new TownShow(showTown).setVisible(true);
+      
         //Grafik ekranını açar.
         //showTown point datasını TownShow JFrame'ine gönderir.
         new TownShow(showTown).setVisible(true);
@@ -228,7 +225,7 @@ public class NewJFrame extends javax.swing.JFrame {
     
     public void readFile() throws FileNotFoundException, IOException {
 
-        File file = new File("/home/db/NetBeansProjects/antColony/src/antcolony/berlin52.tsp");     
+        File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");     
                 //("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
         FileReader fileReader = new FileReader(file);
         String line;
@@ -336,7 +333,7 @@ public class NewJFrame extends javax.swing.JFrame {
        ///draw each town on jframe
          
     }
-<<<<<<< HEAD
+
     /******************/
      public void setupAnts(){
          /// randomly allocate each ants
@@ -370,15 +367,7 @@ public class NewJFrame extends javax.swing.JFrame {
      }
      
      
-     
-     
-     
-     
-=======
-     
-   
 
->>>>>>> 3800e69c4ca391340ab8c8623205012e494cef11
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
