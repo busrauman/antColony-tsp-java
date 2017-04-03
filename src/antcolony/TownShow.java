@@ -9,6 +9,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class TownShow extends javax.swing.JFrame {
         initComponents();
     }
     //NewJFrame'den Data almak için oluşturduk.
-    public TownShow(ArrayList showTown)
+    public TownShow(ArrayList<Point> showTown)
     {
         initComponents();
         System.out.println(showTown);
@@ -94,17 +95,29 @@ public class TownShow extends javax.swing.JFrame {
         
     }
     
-    public void paint(Graphics g) {
-        //Graphics2D g2d = ( Graphics2D ) g;
+    public void paint(Graphics g, ArrayList<Point> showTown) {
+        Graphics2D g2d = ( Graphics2D ) g;
+        g2d.setStroke(new BasicStroke(3));
         
         //Rectangle2D.Double rect = new Rectangle2D.Double(25,25,100,100);
         //g.setColor(Color.red);
-        g.setColor(Color.red);
-        g.fillOval(10,10,20,20);
+        //g.setColor(Color.red);
+        //g.fillOval(10,10,20,20);
+       for(Point point : showTown)
+       {
+            g2d.setColor(Color.RED);
+            g2d.setStroke(new BasicStroke(7));
+            g2d.drawLine((int) point.x, (int) point.y, (int) point.x, (int) point.y);
+        }
+           
+       }
+
+        
+        
                 
      }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-}
+
