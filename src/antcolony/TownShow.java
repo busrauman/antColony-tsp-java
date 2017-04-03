@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * @author db
  */
 public class TownShow extends javax.swing.JFrame {
+    ArrayList<Point> showTown2 = new ArrayList<Point>();
 
     /**
      * Creates new form TownShow
@@ -26,10 +27,11 @@ public class TownShow extends javax.swing.JFrame {
         initComponents();
     }
     //NewJFrame'den Data almak için oluşturduk.
-    public TownShow(ArrayList<Point> showTown)
+    public TownShow(ArrayList showTown)
     {
         initComponents();
         System.out.println(showTown);
+        showTown2 = showTown;
         
     }
 
@@ -95,7 +97,7 @@ public class TownShow extends javax.swing.JFrame {
         
     }
     
-    public void paint(Graphics g, ArrayList<Point> showTown) {
+    public void paint(Graphics g) {
         Graphics2D g2d = ( Graphics2D ) g;
         g2d.setStroke(new BasicStroke(3));
         
@@ -103,18 +105,15 @@ public class TownShow extends javax.swing.JFrame {
         //g.setColor(Color.red);
         //g.setColor(Color.red);
         //g.fillOval(10,10,20,20);
-       for(Point point : showTown)
+       for(Point point : showTown2)
        {
             g2d.setColor(Color.RED);
             g2d.setStroke(new BasicStroke(7));
-            g2d.drawLine((int) point.x, (int) point.y, (int) point.x, (int) point.y);
+            g2d.drawLine(point.x, point.y, point.x, point.y);
+            //g.fillOval(10,10,20,20);
         }
            
-       }
-
-        
-        
-                
+       }                  
      }
     
 
