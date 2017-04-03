@@ -40,6 +40,7 @@ public class NewJFrame extends javax.swing.JFrame {
          ArrayList<Distance> distanceList = new ArrayList<Distance>();
            ArrayList<Town> towns = new ArrayList<Town>();
            ArrayList<Point> showTown = new ArrayList<Point>();
+           ArrayList<Ant> ants = new ArrayList<Ant>();
     /**
      * Creates new form NewJFrame
      */
@@ -74,7 +75,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(248, 28, 28));
+        jButton2.setBackground(new java.awt.Color(166, 202, 205));
         jButton2.setForeground(new java.awt.Color(52, 174, 112));
         jButton2.setText("Başlat");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -163,11 +164,13 @@ public class NewJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         //algoritmaya başla
+        setupAnts();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        
+         new TownShow(showTown).setVisible(true);
         //Grafik ekranını açar.
       
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -284,7 +287,7 @@ public class NewJFrame extends javax.swing.JFrame {
     
     public void scalingTownToShow(){
         
-        int  xMax, yMax, xMin,yMin,x,y,X,Y,screenMaxX = 1450, screenMinX = 25, screenMaxY = 550 , screenMinY = 25;
+        int  xMax, yMax, xMin,yMin,x,y,X,Y,screenMaxX = 1450, screenMinX = 30, screenMaxY = 540 , screenMinY = 35;
         ArrayList<Integer> xList = new ArrayList<Integer>();
         ArrayList<Integer> yList = new ArrayList<Integer>();
         Point p;
@@ -317,9 +320,43 @@ public class NewJFrame extends javax.swing.JFrame {
      private void showTowns() {
        ///draw each town on jframe
     }
-    
+    /******************/
+     public void setupAnts(){
+         /// randomly allocate each ants
+         int townSize = towns.size();
+         int antSize  = townSize; // default olarak verildi güncellenecek
+         
+         for(int i = 0 ; i < antSize ; i++){
+            // ants.clear();
+             Ant ant  = new Ant();
+            // ant.visited.add(i,false);
+             ants.add(ant);
+             System.out.print("burda");
+         }
+         
+         deneme();
+                
+     }
+     
+     
+     public void setVisitedTown(Ant ant,Town town){
+         ant.tours.add(town);
+         ant.visited.add(Integer.parseInt(town.getName()) -1 , true);
+     }
 
-
+     public void deneme(){
+         int i = 0; 
+         for(Ant ant : ants){
+             System.out.println("karınca" +ant.visited.get(i));;
+             i++;
+         }
+     }
+     
+     
+     
+     
+     
+     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
