@@ -35,18 +35,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import java.awt.*;
+import static java.lang.Math.pow;
+import java.util.Random;
 import javax.swing.JInternalFrame;
-
 
 public class NewJFrame extends javax.swing.JFrame {
 
-         ArrayList<Distance> distanceList = new ArrayList<Distance>();
-           ArrayList<Town> towns = new ArrayList<Town>();
-           ArrayList<Point> showTown = new ArrayList<Point>();
-           ArrayList<Ant> ants = new ArrayList<Ant>();
+    ArrayList<Distance> distanceList = new ArrayList<Distance>();
+    ArrayList<Town> towns = new ArrayList<Town>();
+    ArrayList<Point> showTown = new ArrayList<Point>();
+    ArrayList<Ant> ants = new ArrayList<Ant>();
+    ArrayList<Ant> shuffleAnts = new ArrayList<Ant>();
+    ArrayList<Town> shuffleTowns = new ArrayList<Town>();
 
-       
-        JFrame frame;
+    JFrame frame;
 
     /**
      * Creates new form NewJFrame
@@ -174,18 +176,18 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         //algoritmaya başla
         setupAnts();
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-      
+
         //Grafik ekranını açar.
         //showTown point datasını TownShow JFrame'ine gönderir.
         new TownShow(showTown).setVisible(true);
-      
+
     }//GEN-LAST:event_jButton4ActionPerformed
-  
+
     /**
      * @param args the command line arguments
      */
@@ -212,25 +214,24 @@ public class NewJFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
-         
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
-                new NewJFrame().setVisible(true);        
+
+                new NewJFrame().setVisible(true);
             }
         });
     }
-    
+
     public void readFile() throws FileNotFoundException, IOException {
 
-        File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");     
-                //("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
+        File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
+        //("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
         FileReader fileReader = new FileReader(file);
         String line;
         Point nokta;
-      
+
         Town town;
         BufferedReader br = new BufferedReader(fileReader);
         boolean okuma = false;
@@ -247,14 +248,14 @@ public class NewJFrame extends javax.swing.JFrame {
                     //System.out.println(line);
                     String[] point = line.split(" ");
                     town = new Town();
-                    town.setName(point[0]);                   
+                    town.setName(point[0]);
                     float x = Float.parseFloat(point[1]);
                     float y = Float.parseFloat(point[2]);
                     // System.out.println(String.valueOf(x)+" - " + String.valueOf(y));
                     nokta = new Point((int) x, (int) y);
                     town.setLocation(nokta);
                     towns.add(town);
-                   }
+                }
             }
 
         } catch (Exception e) {
@@ -268,25 +269,24 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     public void computeDistance(ArrayList<Town> towns) {
-       
+
         long computedDistance = 0;
         Distance newDistance;
-        for(Town source : towns ){
-            for(Town destination : towns){
-                if(! source.getName().equals(destination.getName())){
+        for (Town source : towns) {
+            for (Town destination : towns) {
+                if (!source.getName().equals(destination.getName())) {
                     computedDistance = distance(source.getLocation(), destination.getLocation());
                     newDistance = new Distance();
                     newDistance.setSource(source);
                     newDistance.setDestination(destination);
                     newDistance.setDistance(computedDistance);
+                    newDistance.setPheromone(1);
                     distanceList.add(newDistance);
                 }
             }
         }
-        
-        
-       
-       scalingTownToShow();
+
+        scalingTownToShow();
     }
 
     public static long distance(Point a, Point b) {
@@ -294,79 +294,146 @@ public class NewJFrame extends javax.swing.JFrame {
         double dy = a.y - b.y;
         return Math.round(Math.sqrt(dx * dx + dy * dy));
     }
-    
+
     // scale each point  to show towns on my  jframe 
-    
-    public void scalingTownToShow(){
-        
-        int  xMax, yMax, xMin,yMin,x,y,X,Y,screenMaxX = 1450, screenMinX = 30, screenMaxY = 540 , screenMinY = 35;
+    public void scalingTownToShow() {
+
+        int xMax, yMax, xMin, yMin, x, y, X, Y, screenMaxX = 1250, screenMinX = 25, screenMaxY = 550, screenMinY = 35;
         ArrayList<Integer> xList = new ArrayList<Integer>();
         ArrayList<Integer> yList = new ArrayList<Integer>();
         Point p;
-      for(Town t : towns){
-          
-          x = t.getLocation().x;
-          y = t.getLocation().y;
-          xList.add(x);
-          yList.add(y);
-      }
-      
-      xMax = Collections.max(xList);
-      yMax = Collections.max(yList);
-      xMin = Collections.min(xList);
-      yMin = Collections.min(yList);
-      
-       double xRate=(double) (screenMaxX - screenMinX) / (xMax - xMin);
-       double yRate =(double) (screenMaxY - screenMinY) / (yMax - yMin);
-       
-      for(Town t : towns){
-          X = (int) ((t.getLocation().x - xMin) * xRate) + screenMinX;
-          Y = (int) ((t.getLocation().y - yMin) * yRate) + screenMinY;
-          p = new Point(X,Y);
-          
-          showTown.add(p);
-      }
-     // showTowns();
+        for (Town t : towns) {
+
+            x = t.getLocation().x;
+            y = t.getLocation().y;
+            xList.add(x);
+            yList.add(y);
+        }
+
+        xMax = Collections.max(xList);
+        yMax = Collections.max(yList);
+        xMin = Collections.min(xList);
+        yMin = Collections.min(yList);
+
+        double xRate = (double) (screenMaxX - screenMinX) / (xMax - xMin);
+        double yRate = (double) (screenMaxY - screenMinY) / (yMax - yMin);
+
+        for (Town t : towns) {
+            X = (int) ((t.getLocation().x - xMin) * xRate) + screenMinX;
+            Y = (int) ((t.getLocation().y - yMin) * yRate) + screenMinY;
+            p = new Point(X, Y);
+
+            showTown.add(p);
+        }
+        // showTowns();
     }
 
-     private void showTowns() {
-       ///draw each town on jframe
-         
+    public void probTo(Ant ant) {
+        //her ant için gidilebilecek şehirlerin listesi
+        //formül
+        double denom = 0.0;
+        Town currenTown = ant.currentTown;
+        Town deneme = towns.get(Integer.parseInt(currenTown.getName()) - 1);
+        System.err.println("current town" + currenTown.getName() );
+
+        for (int l = 0; l < 5; l++) {
+      //      System.err.println("deneme");
+            if (! ant.visited.get(l)) {
+                                
+
+                System.err.println(ant.name + " in  gittmediği " + towns.get(l).getName());
+
+            }else{
+               // System.err.println("deneme22");
+            }
+        }
+
     }
 
-    /******************/
-     public void setupAnts(){
-         /// randomly allocate each ants
-         int townSize = towns.size();
-         int antSize  = townSize; // default olarak verildi güncellenecek
-         
-         for(int i = 0 ; i < antSize ; i++){
-            // ants.clear();
-             Ant ant  = new Ant();
-            // ant.visited.add(i,false);
-             ants.add(ant);
-             System.out.print("burda");
-         }
-         
-         deneme();
-                
-     }
-     
-     
-     public void setVisitedTown(Ant ant,Town town){
-         ant.tours.add(town);
-         ant.visited.add(Integer.parseInt(town.getName()) -1 , true);
-     }
+    public void moveAnt() {
+        //karınca yer değiştirecek
+    }
 
-     public void deneme(){
-         int i = 0; 
-         for(Ant ant : ants){
-             System.out.println("karınca" +ant.visited.get(i));;
-             i++;
-         }
-     }
-     
-     
+    public void increasePheromone(Distance distance) {
+        distance.setPheromone(distance.getPheromone() + 1);
+    }
+
+    public void reducePheromone(Distance distance) {
+        distance.setPheromone(distance.getPheromone() - 1);
+
+    }
+
+    /**
+     * ***************
+     */
+    public void setupAnts() {
+
+        int townSize = towns.size();
+        int antSize = townSize;
+        for (int i = 0; i < 5; i++) {
+            Ant ant = new Ant();
+            ant.name = String.valueOf(i + 1);
+            ant.visited = new ArrayList<Boolean>();
+            ant.tours = new ArrayList<Town>();
+            ants.add(ant);
+            for (int j = 0; j < townSize; j++) {
+                ant.visited.add(false);
+            }
+
+        }
+
+        // long seed = System.nanoTime();
+        shuffleTowns = towns;
+        shuffleAnts = ants;
+        Constant maxItr = new Constant();
+        for (int loop = 0; loop < maxItr.getMaxIteration(); loop++) {
+           // shuffleList();
+            //olasılıklar hesaplanıcak 
+        }
+        shuffleList();
+    }
+
+    public void shuffleList() {
+        Collections.shuffle(shuffleAnts);
+        Collections.shuffle(shuffleTowns);
+
+
+        /*for (Ant a : shuffleAnts) {
+            System.out.println("karınca" + a.name);
+        }
+
+        for (Town a : shuffleTowns) {
+            System.out.println("town" + a.getName());
+        }*/
+        for (int k = 0; k < shuffleAnts.size(); k++) {
+            setVisitedTown(shuffleAnts.get(k), shuffleTowns.get(k));
+            System.out.println(shuffleAnts.get(k).name + ". Karınca " + shuffleTowns.get(k).getName() + ". Şehirde");
+
+            //System.out.println("shufle  "+shuffleAnts.get(k).name + ". ants " + ants.get(k).name +"   ");
+           // probTo(ants.get(k));
+        }
+
+        //   System.out.println("tur" + shuffleAnts.get(8).tours.get(0).getName());        System.out.println("tur" + ants.get(8).tours.get(0).getName());
+       /* for (Ant a : shuffleAnts) {
+            for (int i = 0; i < a.tours.size(); i++) {
+                // System.out.print(a.name + " karınca için tour " + a.tours.get(i).getName() +"   ");
+            }
+            //System.out.println("");
+            probTo(a);
+        }*/
+
+    }
+
+    public void setVisitedTown(Ant ant, Town town) {
+
+        ant.tours.add(town);
+        ant.visited.add(Integer.parseInt(town.getName()) - 1, true);
+        // System.out.println("karinca  " + ant.name +"  town " + town.getName());
+        ant.currentTown = town;
+        probTo(ant);
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -378,5 +445,4 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 
-   
 }

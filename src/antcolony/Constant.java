@@ -24,6 +24,7 @@ public class Constant {
     private double numAntFactor = 0.8;
     // probability of pure random selection of the next town
     private double pr = 0.01; // to move next town
+    private  long  maxIteration = 5;
 
     /**
      * @return the C
@@ -72,5 +73,19 @@ public class Constant {
      */
     public double getPr() {
         return pr;
+    }
+
+    /**
+     * @return the maxIteration
+     */
+    public long getMaxIteration() {
+        return maxIteration;
+    }
+
+    /**
+     * @param maxIteration the maxIteration to set
+     */
+    public void setMaxIteration(long maxIteration) {
+        this.maxIteration = maxIteration;
     }
 }

@@ -14,8 +14,10 @@ import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
  */
 public class Ant {
     
-    public ArrayList<Boolean> visited ;//town index -> true or false
+  public String name;
+   public ArrayList<Boolean> visited ;//town index -> true or false
     public ArrayList<Town> tours; // tour list for each ants 
     public int tourLength;
     public String bestTour; // best solition from tour list for one ant
+    public Town currentTown;
 }

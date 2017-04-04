@@ -13,6 +13,7 @@ public class Distance {
    private Town source;
    private Town destination;
    private long distance;
+   private int pheromone;
 
     /**
      * @return the source
@@ -54,6 +55,20 @@ public class Distance {
      */
     public void setDistance(long distance) {
         this.distance = distance;
+    }
+
+    /**
+     * @return the pheromone
+     */
+    public int getPheromone() {
+        return pheromone;
+    }
+
+    /**
+     * @param pheromone the pheromone to set
+     */
+    public void setPheromone(int pheromone) {
+        this.pheromone = pheromone;
     }
     
 }
