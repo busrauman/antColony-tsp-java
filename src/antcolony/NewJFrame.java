@@ -37,6 +37,7 @@ import javax.swing.JFrame;
 import java.awt.*;
 import static java.lang.Math.pow;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
 import javax.swing.JInternalFrame;
 
 public class NewJFrame extends javax.swing.JFrame {
@@ -47,6 +48,9 @@ public class NewJFrame extends javax.swing.JFrame {
     ArrayList<Ant> ants = new ArrayList<Ant>();
     ArrayList<Ant> shuffleAnts = new ArrayList<Ant>();
     ArrayList<Town> shuffleTowns = new ArrayList<Town>();
+    ArrayList<Distance> shuffleDistances = new ArrayList<Distance>();
+    public ArrayList<Double> prob;
+    ArrayList<Distance> tempDistances;
 
     JFrame frame;
 
@@ -333,23 +337,88 @@ public class NewJFrame extends javax.swing.JFrame {
         //formül
         double denom = 0.0;
         Town currenTown = ant.currentTown;
-        Town deneme = towns.get(Integer.parseInt(currenTown.getName()) - 1);
-        System.err.println("current town" + currenTown.getName() );
+        boolean cont = false;
+        // System.err.println("current town" + currenTown.getName());
 
-        for (int l = 0; l < 5; l++) {
-      //      System.err.println("deneme");
-            if (! ant.visited.get(l)) {
-                                
+        /*    for(int k = 0 ; k < ant.visited.size() ; k++){
+            System.out.print(ant.name + ". karıncanın visit listesi");
+            System.out.println(ant.visited.get(k));
+        }*/
+        double numarator = 0.0;
+        double computedFeromon[] = new double[52];
+        tempDistances = new ArrayList<Distance>();
+        int i = 0;
+        for (int l = 0; l < towns.size(); l++) {
+            if (!ant.visited.get(l)) {
+                //   System.err.println(ant.name + " karıncası visit durumu " + ant.visited.get(l) + " bulunduğu sehir "   + shuffleTowns.get(ant.currentIndex).getName() );
+                //System.out.println(ant.name + " in girmediği şehir " + shuffleTowns.get(l).getName() + "distance list sourcesi : " + distanceList.get(l).getSource().getName());
+                // System.out.println("=====================================");
 
-                System.err.println(ant.name + " in  gittmediği " + towns.get(l).getName());
+                if (!cont) {
+                    for (int k = 0; k < distanceList.size(); k++) {
+                        if (distanceList.get(k).getSource().getName().equals(currenTown.getName())) {
+                            //  System.out.println(distanceList.get(k).getSource().getName() + " şehrinden " + distanceList.get(k).getDestination().getName() + " arası uzaklık = "
+                            //        + distanceList.get(k).getDistance());
+                            denom += pow(distanceList.get(k).getPheromone(), 2)
+                                    * pow((double) 1 / distanceList.get(k).getDistance(), 2);//1. alpha 2.beta 
+                            computedFeromon[i] = pow(distanceList.get(k).getPheromone(), 2)
+                                    * pow((double) 1 / distanceList.get(k).getDistance(), 2);//1. alpha 2.beta 
+                            tempDistances.add(distanceList.get(k));
+                            //  System.out.println("denom : "+denom);
+                            i++;
+                        }
+                        cont = true;
+                    }
+                }
 
-            }else{
-               // System.err.println("deneme22");
+            } else {
+                tempDistances.add(null);
+
             }
         }
 
-    }
+        cont = false;
+        prob = new ArrayList<Double>();
+        int j = 0, a = 0;
+        for (int k = 0; k < towns.size(); k++) {
+            if (ant.visited.get(k)) {
+                //System.out.println(ant.currentIndex + ". index shuffle da " + shuffleTowns.get(ant.currentIndex).getName() + " k = " + ant.visited.get(k));
+                prob.add(0.0);
 
+            } else {
+                numarator = computedFeromon[a];
+                prob.add((double) numarator / denom);
+                a++;
+            }
+
+        }
+        // System.err.println(tempDistances.size());
+        /*int k = 1;
+            for(Distance d : tempDistances){
+                if( d != null)
+                System.out.println(k++ +" .  distances : "+ d.getSource().getName() +" -->"+d.getDestination().getName());
+            }*/
+        for (int f = 0; f < prob.size(); f++) {
+            if (tempDistances.get(f) != null) {
+                System.out.println(ant.name + " için prob " + prob.get(f) + " gitmesi gerek  " + tempDistances.get(f).getDestination().getName());
+                //  // karıncayı yer değiştir  gidilen şehri setVisit true et tour listesine ekle
+                setVisitedTown(ant, tempDistances.get(f).getDestination(), ant.currentIndex);
+                // feramonları güncelle
+                //döngünün sonlanmasını bekle
+            }
+
+        }
+        
+        //besttour u bul
+        // System.out.println(ant.name + "  karnca için  " + Collections.max(prob) +" index of " + prob.indexOf(Collections.max(prob)));
+       //System.out.println(ant.name + "  karnca için  " + Collections.max(prob) + " nextto " + tempDistances.get(prob.indexOf(Collections.max(prob))).getDestination().getName());
+
+    }
+    public void bestTourForOneAnt(){
+        for()
+        
+        retun ant;
+    }
     public void moveAnt() {
         //karınca yer değiştirecek
     }
@@ -363,14 +432,11 @@ public class NewJFrame extends javax.swing.JFrame {
 
     }
 
-    /**
-     * ***************
-     */
     public void setupAnts() {
 
         int townSize = towns.size();
         int antSize = townSize;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < antSize; i++) {
             Ant ant = new Ant();
             ant.name = String.valueOf(i + 1);
             ant.visited = new ArrayList<Boolean>();
@@ -382,55 +448,48 @@ public class NewJFrame extends javax.swing.JFrame {
 
         }
 
-        // long seed = System.nanoTime();
         shuffleTowns = towns;
         shuffleAnts = ants;
+        shuffleDistances = distanceList;
         Constant maxItr = new Constant();
         for (int loop = 0; loop < maxItr.getMaxIteration(); loop++) {
-           // shuffleList();
+            // shuffleList();
             //olasılıklar hesaplanıcak 
         }
         shuffleList();
     }
 
     public void shuffleList() {
+        long seed = System.nanoTime();
+
         Collections.shuffle(shuffleAnts);
-        Collections.shuffle(shuffleTowns);
-
-
-        /*for (Ant a : shuffleAnts) {
-            System.out.println("karınca" + a.name);
-        }
-
-        for (Town a : shuffleTowns) {
-            System.out.println("town" + a.getName());
-        }*/
+        Collections.shuffle(shuffleTowns, new Random(seed));
+        Collections.shuffle(shuffleDistances, new Random(seed));
         for (int k = 0; k < shuffleAnts.size(); k++) {
-            setVisitedTown(shuffleAnts.get(k), shuffleTowns.get(k));
-            System.out.println(shuffleAnts.get(k).name + ". Karınca " + shuffleTowns.get(k).getName() + ". Şehirde");
+            setVisitedTown(shuffleAnts.get(k), shuffleTowns.get(k), k);
+            //  System.out.println(shuffleAnts.get(k).name + " . karınca " + shuffleTowns.get(k).getName() + ". şehirde bulunuyor.");
 
-            //System.out.println("shufle  "+shuffleAnts.get(k).name + ". ants " + ants.get(k).name +"   ");
-           // probTo(ants.get(k));
         }
 
-        //   System.out.println("tur" + shuffleAnts.get(8).tours.get(0).getName());        System.out.println("tur" + ants.get(8).tours.get(0).getName());
-       /* for (Ant a : shuffleAnts) {
-            for (int i = 0; i < a.tours.size(); i++) {
-                // System.out.print(a.name + " karınca için tour " + a.tours.get(i).getName() +"   ");
-            }
-            //System.out.println("");
+        for (Ant a : shuffleAnts) {
             probTo(a);
-        }*/
-
+        }
     }
 
-    public void setVisitedTown(Ant ant, Town town) {
+    public void setVisitedTown(Ant ant, Town town, int index) {
 
         ant.tours.add(town);
+        
         ant.visited.add(Integer.parseInt(town.getName()) - 1, true);
         // System.out.println("karinca  " + ant.name +"  town " + town.getName());
         ant.currentTown = town;
-        probTo(ant);
+        ant.currentIndex = index;
+        System.out.println("gelen town : " +town.getName());
+        System.out.println(ant.name + " karıncası "  + town.getName() +" şehrine hareket etti");
+        System.out.println(ant.name+ " karıncasının visited list : ");
+        for(int k = 0 ; k < ant.tours.size() ;k++){
+            System.out.println(ant.tours.get(k).getName());
+        }
 
     }
 

@@ -13,7 +13,7 @@ public class Distance {
    private Town source;
    private Town destination;
    private long distance;
-   private int pheromone;
+   private double pheromone;
 
     /**
      * @return the source
@@ -60,14 +60,14 @@ public class Distance {
     /**
      * @return the pheromone
      */
-    public int getPheromone() {
+    public double getPheromone() {
         return pheromone;
     }
 
     /**
      * @param pheromone the pheromone to set
      */
-    public void setPheromone(int pheromone) {
+    public void setPheromone(double pheromone) {
         this.pheromone = pheromone;
     }
     

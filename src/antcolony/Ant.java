@@ -20,4 +20,7 @@ public class Ant {
     public int tourLength;
     public String bestTour; // best solition from tour list for one ant
     public Town currentTown;
+    public int currentIndex;
+    
+   
 }
