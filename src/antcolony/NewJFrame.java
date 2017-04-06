@@ -39,7 +39,9 @@ import static java.lang.Math.pow;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import javax.swing.JInternalFrame;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+import javax.swing.JPanel;
+import org.math.plot.Plot2DPanel;
+
 
 public class NewJFrame extends javax.swing.JFrame {
 
@@ -54,8 +56,12 @@ public class NewJFrame extends javax.swing.JFrame {
     ArrayList<Distance> tempDistances;
     ArrayList<Double> bestTourForIteration = new ArrayList<Double>();
     ArrayList<Double> solitions = new ArrayList<>();
+    private JFrame frame = new JFrame("Ant Colony");
+    private JPanel panel = new JPanel();
+    int arrayIter[] = new int[150];
+    double arrayBest[] = new double[150];
+    
 
-    JFrame frame;
 
     /**
      * Creates new form NewJFrame
@@ -80,6 +86,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -119,14 +126,23 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("X-Y Grafiği");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(966, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -138,11 +154,8 @@ public class NewJFrame extends javax.swing.JFrame {
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(175, 175, 175))))
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,9 +175,11 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(504, Short.MAX_VALUE))
+                .addContainerGap(468, Short.MAX_VALUE))
         );
 
         pack();
@@ -194,6 +209,11 @@ public class NewJFrame extends javax.swing.JFrame {
         new TownShow(showTown).setVisible(true);
 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        //X-Y Grafiğini Çizdiren Fonksiyonu Çalıştırıyor
+        Plot();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -230,11 +250,44 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
     }
+    public void Plot() {
+        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        double[] y = new double[]{0, 100, 20, 70 ,10 ,50, 30, 70, 40, 90, 100};
+        Plot2DPanel plot = new Plot2DPanel() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(600, 400);
+            }
+        };
+        plot.addLegend("WEST");
+        plot.addLinePlot("my plot", x, y);
+        //plot.setBackground(Color.red);
+        // add a line plot to the PlotPanel     
+        panel.setLayout(new BorderLayout());
+        panel.add(plot);
+        frame.add(panel);
+        frame.pack();
+        frame.setLocation(150, 150);
+        frame.setVisible(true);
+    }
+    //Hiçbir yerde çağırılmadı
+    public void calculateMaxIter()
+    {
+        Constant c = new Constant();
+        for(int i = 0; i< c.getMaxIteration(); i++)
+        {
+            arrayIter[i] = i;
+            System.err.println("iter " + i);
+        }
+        //Plot(arrayIter, arrayBest);
+    }
+
 
     public void readFile() throws FileNotFoundException, IOException {
 
-        File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
+        File file = new File("/home/db/works/antColony-tsp-java/src/antcolony/berlin52.tsp");
         //("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
+        //("/home/db/works/antColony-tsp-java/src/antcolony/berlin52.tsp");
         FileReader fileReader = new FileReader(file);
         String line;
         Point nokta;
@@ -516,6 +569,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

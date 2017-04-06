@@ -6,7 +6,7 @@
 package antcolony;
 
 import java.util.ArrayList;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+//import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 
 /**
  *
