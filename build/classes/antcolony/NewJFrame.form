@@ -41,8 +41,11 @@
                           <Component id="jTextField2" alignment="1" min="-2" pref="140" max="-2" attributes="0"/>
                           <Component id="jTextField3" alignment="1" min="-2" pref="140" max="-2" attributes="0"/>
                       </Group>
+<<<<<<< HEAD
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton2" min="-2" pref="122" max="-2" attributes="0"/>
+=======
+>>>>>>> 475ee499dea6f6194d911934d23ee56d7bff19b4
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

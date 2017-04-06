@@ -41,6 +41,10 @@ import java.util.concurrent.ExecutorService;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import org.math.plot.Plot2DPanel;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 475ee499dea6f6194d911934d23ee56d7bff19b4
 
 public class NewJFrame extends javax.swing.JFrame {
 
@@ -59,6 +63,11 @@ public class NewJFrame extends javax.swing.JFrame {
     private JPanel panel = new JPanel();
     int arrayIter[] = new int[150];
     double arrayBest[] = new double[150];
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 475ee499dea6f6194d911934d23ee56d7bff19b4
 
     /**
      * Creates new form NewJFrame
@@ -142,6 +151,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+<<<<<<< HEAD
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(90, 90, 90)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -151,6 +161,18 @@ public class NewJFrame extends javax.swing.JFrame {
                             .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+=======
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(90, 90, 90)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+>>>>>>> 475ee499dea6f6194d911934d23ee56d7bff19b4
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -171,7 +193,13 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
+<<<<<<< HEAD
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+=======
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+>>>>>>> 475ee499dea6f6194d911934d23ee56d7bff19b4
                 .addGap(18, 18, 18)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
@@ -258,6 +286,38 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
     }
+    public void Plot() {
+        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        double[] y = new double[]{0, 100, 20, 70 ,10 ,50, 30, 70, 40, 90, 100};
+        Plot2DPanel plot = new Plot2DPanel() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(600, 400);
+            }
+        };
+        plot.addLegend("WEST");
+        plot.addLinePlot("my plot", x, y);
+        //plot.setBackground(Color.red);
+        // add a line plot to the PlotPanel     
+        panel.setLayout(new BorderLayout());
+        panel.add(plot);
+        frame.add(panel);
+        frame.pack();
+        frame.setLocation(150, 150);
+        frame.setVisible(true);
+    }
+    //Hiçbir yerde çağırılmadı
+    public void calculateMaxIter()
+    {
+        Constant c = new Constant();
+        for(int i = 0; i< c.getMaxIteration(); i++)
+        {
+            arrayIter[i] = i;
+            System.err.println("iter " + i);
+        }
+        //Plot(arrayIter, arrayBest);
+    }
+
 
     public void Plot() {
         double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -292,9 +352,13 @@ public class NewJFrame extends javax.swing.JFrame {
 
     public void readFile() throws FileNotFoundException, IOException {
 
+<<<<<<< HEAD
         towns.clear();
         File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
 
+=======
+        File file = new File("/home/db/works/antColony-tsp-java/src/antcolony/berlin52.tsp");
+>>>>>>> 475ee499dea6f6194d911934d23ee56d7bff19b4
         //("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
         //("/home/db/works/antColony-tsp-java/src/antcolony/berlin52.tsp");
         FileReader fileReader = new FileReader(file);
