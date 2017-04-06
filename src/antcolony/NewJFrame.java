@@ -182,7 +182,17 @@ public class NewJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         //algoritmaya başla
-        setupAnts();
+        for (int loop = 0; loop < 100; loop++) {
+            // shuffleList();
+            //olasılıklar hesaplanıcak 
+            setupAnts();
+            shuffleList();
+            System.out.println(loop + " . Shuffle bitti :D");
+            bestTourForOneAnt();
+        }
+
+        System.out.println("Solitions : " + Collections.min(solitions));
+
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -232,7 +242,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     public void readFile() throws FileNotFoundException, IOException {
-
+        towns.clear();
         File file = new File("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
         //("/home/busra/NetBeansProjects/AntColony/src/antcolony/berlin52.tsp");
         FileReader fileReader = new FileReader(file);
@@ -276,6 +286,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     public void computeDistance(ArrayList<Town> towns) {
+        distanceList.clear();
 
         long computedDistance = 0;
         Distance newDistance;
@@ -287,7 +298,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     newDistance.setSource(source);
                     newDistance.setDestination(destination);
                     newDistance.setDistance(computedDistance);
-                    newDistance.setPheromone(1);
+                    newDistance.setPheromone(10);
                     distanceList.add(newDistance);
                 }
             }
@@ -341,12 +352,7 @@ public class NewJFrame extends javax.swing.JFrame {
         double denom = 0.0;
         Town currenTown = ant.currentTown;
         boolean cont = false;
-        // System.err.println("current town" + currenTown.getName());
 
-        /*    for(int k = 0 ; k < ant.visited.size() ; k++){
-            System.out.print(ant.name + ". karıncanın visit listesi");
-            System.out.println(ant.visited.get(k));
-        }*/
         double numarator = 0.0;
         double computedFeromon[] = new double[52];
         tempDistances = new ArrayList<Distance>();
@@ -357,10 +363,10 @@ public class NewJFrame extends javax.swing.JFrame {
                     for (int k = 0; k < distanceList.size(); k++) {
                         if (distanceList.get(k).getSource().getName().equals(currenTown.getName())) {
 
-                            denom += pow(distanceList.get(k).getPheromone(), 3)
-                                    * pow((double) 1 / distanceList.get(k).getDistance(), 2);//1. alpha 2.beta 
-                            computedFeromon[i] = pow(distanceList.get(k).getPheromone(), 3)
-                                    * pow((double) 1 / distanceList.get(k).getDistance(), 2);//1. alpha 2.beta 
+                            denom += pow(distanceList.get(k).getPheromone(), 1)
+                                    * pow((double) 1 / distanceList.get(k).getDistance(), 5);//1. alpha 2.beta 
+                            computedFeromon[i] = pow(distanceList.get(k).getPheromone(), 1)
+                                    * pow((double) 1 / distanceList.get(k).getDistance(), 5);//1. alpha 2.beta 
                             tempDistances.add(distanceList.get(k));
 
                             i++;
@@ -392,12 +398,14 @@ public class NewJFrame extends javax.swing.JFrame {
         }
 
         for (int f = 0; f < prob.size(); f++) {
-            if (tempDistances.get(f) != null) {
+            if (tempDistances.get(f) != null && prob.get(f) == Collections.max(prob)) {
                 // System.out.println(ant.name + " için prob " + prob.get(f) + " gitmesi gerek  " + tempDistances.get(f).getDestination().getName());
                 setVisitedTown(ant, tempDistances.get(f).getDestination(), ant.currentIndex);
                 increasePheromone(tempDistances.get(f));
                 // feramonları güncelle
                 //döngünün sonlanmasını bekle
+            } else {
+                reducePheromone(tempDistances.get(f));
             }
 
         }
@@ -422,6 +430,8 @@ public class NewJFrame extends javax.swing.JFrame {
             a.tourLength = tourLength;
             bestTourForIteration.add((double) a.tourLength);
             tourLength = 0;
+            a.tours.clear();
+            // a.visited.clear();
         }
 
         for (Double x : bestTourForIteration) {
@@ -430,15 +440,21 @@ public class NewJFrame extends javax.swing.JFrame {
         System.out.println("en iyi best top of : " + Collections.min(bestTourForIteration));
         solitions.add(Collections.min(bestTourForIteration));
         bestTourForIteration.clear();
-        
+
     }
 
     public void increasePheromone(Distance distance) {
-        distance.setPheromone(distance.getPheromone() + 5);
+        if (distance != null) {
+            distance.setPheromone(distance.getPheromone() + 1);
+            System.out.println(distance.getSource().getName() + " - " + distance.getDestination().getName() + " atış " + distance.getPheromone());
+        }
     }
 
     public void reducePheromone(Distance distance) {
-        distance.setPheromone(distance.getPheromone() - 1);
+        if (distance != null) {
+            distance.setPheromone(distance.getPheromone() - 0.1);
+            System.out.println(distance.getSource().getName() + " - " + distance.getDestination().getName() + " buharlaşma " + distance.getPheromone());
+        }
 
     }
 
@@ -446,6 +462,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         int townSize = towns.size();
         int antSize = townSize;
+        ants.clear();
         for (int i = 0; i < antSize; i++) {
             Ant ant = new Ant();
             ant.name = String.valueOf(i + 1);
@@ -457,21 +474,11 @@ public class NewJFrame extends javax.swing.JFrame {
             }
 
         }
-
         shuffleTowns = towns;
         shuffleAnts = ants;
         shuffleDistances = distanceList;
         Constant maxItr = new Constant();
-        for (int loop = 0; loop < 100; loop++) {
-            // shuffleList();
-            //olasılıklar hesaplanıcak 
-            shuffleList();
-        System.out.println(loop + " . Shuffle bitti :D");
-              bestTourForOneAnt();
-        }
-        
-        System.out.println("Solitions : " + Collections.min(solitions));
-        
+
     }
 
     public void shuffleList() {
@@ -507,7 +514,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 return d.getDistance();
             }
         }
-        return 0;
+        return -1;
     }
 
 
